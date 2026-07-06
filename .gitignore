@@ -3,3 +3,7 @@ __pycache__/
 node_modules/
 .env
 dist/
+.venv/
+node_dist/
+backend/uploads/*
+!backend/uploads/.gitkeep
