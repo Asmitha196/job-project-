@@ -15,7 +15,7 @@ class Settings(BaseSettings):
     PORT: int = 8000
 
     # Database Settings
-    DATABASE_URL: str = "postgresql+asyncpg://postgres:postgrespassword@localhost:5432/job_recommendation_db"
+    DATABASE_URL: str = "postgresql+asyncpg://postgres.ahshvknaizibhosyqpkf:cnUiNXTWRWfBCRQk@aws-1-ap-south-1.pooler.supabase.com:6543/postgres"
 
     # Security Settings
     JWT_SECRET_KEY: str = "your_super_secret_jwt_key_here"

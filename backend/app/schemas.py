@@ -143,3 +143,36 @@ class RecommendationResponse(BaseModel):
     job: Optional[JobResponse] = None
 
     model_config = ConfigDict(from_attributes=True)
+
+
+# ==========================================
+# Chatbot Schemas
+# ==========================================
+
+from pydantic import BaseModel, Field
+
+
+class ChatRequest(BaseModel):
+    session_id: str = Field(..., example="user123")
+    message: str = Field(
+        ...,
+        example="Suggest Python Backend Developer jobs for me."
+    )
+
+
+class ChatResponse(BaseModel):
+    success: bool = Field(..., example=True)
+    response: str = Field(
+        ...,
+        example="Based on your profile, I recommend Backend Python Developer roles."
+    )
+
+
+class ClearMemoryResponse(BaseModel):
+    success: bool = Field(..., example=True)
+    message: str = Field(
+        ...,
+        example="Conversation history cleared successfully."
+    )
+
+    

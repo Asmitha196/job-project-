@@ -1,18 +1,16 @@
 import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
+from backend.app.routes.rag_routers import router as rag_router
 from backend.app.config import settings
 from backend.app.database import engine, Base
 from backend.app import models
 from backend.app.routes.auth_routes import router as auth_router
-
-print("DATABASE_URL =", settings.DATABASE_URL)
 from backend.app.routes.job_routes import router as job_router
 from backend.app.routes.resume_routes import router as resume_router
 from backend.app.routes.recommendation_routes import router as recommendation_router
 from backend.app.routes.ai_routes import router as ai_router
-
+from backend.app.routes.chatbot import router as chatbot_router
 app = FastAPI(
     title=settings.APP_NAME,
     description="Backend API for AI-Powered Job Recommendation Assistant",
@@ -60,5 +58,6 @@ app.include_router(job_router, prefix="/api/jobs", tags=["Jobs"])
 app.include_router(resume_router, prefix="/api/resumes", tags=["Resume"])
 app.include_router(recommendation_router, prefix="/api/recommendations", tags=["Recommendations"])
 app.include_router(ai_router, prefix="/api/ai", tags=["AI Verification"])
-
+app.include_router(rag_router, prefix="/api/rag", tags=["RAG"])
+app.include_router(rag_router, prefix="/api/rag", tags=["RAG"])
 

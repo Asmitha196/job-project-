@@ -8,7 +8,10 @@ from backend.app.config import settings
 engine = create_async_engine(
     settings.DATABASE_URL,
     echo=True if settings.APP_ENV == "development" else False,
-    future=True
+    future=True,
+    connect_args={
+        "statement_cache_size": 0,
+    }
 )
 
 # Create session maker

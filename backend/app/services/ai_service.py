@@ -2,7 +2,7 @@ import os
 import json
 from typing import List, Dict, Any, Optional
 import bcrypt
-from sentence_transformers import SentenceTransformer
+from fastembed import TextEmbedding
 from qdrant_client import QdrantClient
 from qdrant_client.http import models as qmodels
 from langchain_groq import ChatGroq
@@ -41,27 +41,18 @@ except Exception as remote_err:
         qdrant_client = None
 
 # 2. SentenceTransformer Embedding Model (lazy-loaded)
-_embeddings_model: Optional[SentenceTransformer] = None
 
-def get_embeddings_model() -> SentenceTransformer:
-    global _embeddings_model
-    if _embeddings_model is None:
-        print(f"Loading SentenceTransformer embeddings model: {settings.EMBEDDINGS_MODEL_NAME}...")
-        _embeddings_model = SentenceTransformer(settings.EMBEDDINGS_MODEL_NAME)
-        print("Embeddings model loaded successfully.")
-    return _embeddings_model
+_embeddings_model = TextEmbedding(
+    model_name="BAAI/bge-small-en-v1.5"
+)
 
 def get_text_embedding(text: str) -> List[float]:
-    """
-    Generate an embedding vector from text using the SentenceTransformer model.
-    """
     try:
-        model = get_embeddings_model()
-        return model.encode(text).tolist()
+        embedding = list(_embeddings_model.embed([text]))[0]
+        return embedding.tolist()
     except Exception as e:
         print(f"Embedding generation failed: {e}")
-        # Default fallback vector of 768 zeros if model loading fails
-        return [0.0] * 768
+        return [0.0] * 384
 
 # 3. Collection Initialization
 def check_qdrant_health() -> bool:
@@ -125,9 +116,12 @@ def upsert_job_vector(job: models.Job):
                     id=job.id,
                     vector=vector,
                     payload={
+                        "id": job.id,
                         "title": job.title,
                         "company": job.company,
                         "location": job.location,
+                        "description": job.description,
+                        "requirements": job.requirements,
                         "skills_required": job.skills_required
                     }
                 )
