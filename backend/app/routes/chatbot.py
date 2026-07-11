@@ -6,7 +6,7 @@ from backend.app.schemas import (
     ClearMemoryResponse,
 )
 
-from backend.app.services.ai_service import (
+from backend.app.services.chat_service import (
     chat,
     clear_session,
     get_history,
@@ -32,10 +32,8 @@ async def chat_endpoint(request: ChatRequest):
     )
 
     if not result["success"]:
-        raise HTTPException(
-            status_code=400,
-            detail=result["response"],
-        )
+        print("CHAT ERROR:", result)
+        return result
 
     return ChatResponse(
         success=True,
