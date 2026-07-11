@@ -7,3 +7,6 @@ dist/
 node_dist/
 backend/uploads/*
 !backend/uploads/.gitkeep
+local_qdrant_db/
+backend/local_qdrant_db/
+.vscode/

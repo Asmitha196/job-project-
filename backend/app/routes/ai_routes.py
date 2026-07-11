@@ -20,7 +20,7 @@ async def test_groq():
         # Connect to Groq using langchain-groq
         llm = ChatGroq(
             groq_api_key=settings.GROQ_API_KEY,
-            model_name="llama3-8b-8192",
+            model_name=settings.GROQ_MODEL_NAME,
             temperature=0.2
         )
         # Send prompt asynchronously

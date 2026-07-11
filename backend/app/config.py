@@ -24,6 +24,7 @@ class Settings(BaseSettings):
 
     # AI Service Settings
     GROQ_API_KEY: str = "your_groq_api_key_here"
+    GROQ_MODEL_NAME: str = "llama-3.1-8b-instant"
     QDRANT_URL: str = "http://localhost:6333"
     QDRANT_API_KEY: str | None = None
     EMBEDDINGS_MODEL_NAME: str = "sentence-transformers/all-mpnet-base-v2"
@@ -36,3 +37,8 @@ class Settings(BaseSettings):
     )
 
 settings = Settings(_env_file=os.path.join(BASE_DIR, ".env"))
+
+print("========================================")
+print("DATABASE_URL =", settings.DATABASE_URL)
+print("GROQ_API_KEY =", settings.GROQ_API_KEY)
+print("========================================")

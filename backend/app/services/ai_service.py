@@ -18,12 +18,27 @@ COLLECTION_NAME = "jobs"
 # 1. Qdrant Client Setup
 qdrant_client: Optional[QdrantClient] = None
 try:
+    # Attempt to connect to remote/local Docker Qdrant server
     qdrant_client = QdrantClient(
         url=settings.QDRANT_URL,
-        api_key=settings.QDRANT_API_KEY
+        api_key=settings.QDRANT_API_KEY,
+        timeout=2.0,
+        check_compatibility=False
     )
-except Exception as e:
-    print(f"Failed to initialize Qdrant client: {e}")
+    # Check if remote server is reachable
+    qdrant_client.get_collections()
+    print(f"Successfully connected to Qdrant server at {settings.QDRANT_URL}")
+except Exception as remote_err:
+    print(f"WARNING: Remote Qdrant server is offline ({remote_err}). Falling back to embedded local storage Qdrant client...")
+    try:
+        # Fallback to local file-based Qdrant client
+        local_db_path = os.path.join(settings.BASE_DIR, "backend", "local_qdrant_db")
+        os.makedirs(local_db_path, exist_ok=True)
+        qdrant_client = QdrantClient(path=local_db_path)
+        print(f"Embedded local Qdrant initialized at: {local_db_path}")
+    except Exception as local_err:
+        print(f"CRITICAL: Failed to initialize fallback local Qdrant client: {local_err}")
+        qdrant_client = None
 
 # 2. SentenceTransformer Embedding Model (lazy-loaded)
 _embeddings_model: Optional[SentenceTransformer] = None
@@ -204,7 +219,7 @@ def generate_match_reasoning(
     try:
         llm = ChatGroq(
             groq_api_key=settings.GROQ_API_KEY,
-            model_name="llama3-8b-8192",
+            model_name=settings.GROQ_MODEL_NAME,
             temperature=0.2
         )
         
@@ -287,7 +302,7 @@ def generate_learning_path(skills_gap_list: List[str]) -> str:
     try:
         llm = ChatGroq(
             groq_api_key=settings.GROQ_API_KEY,
-            model_name="llama3-8b-8192",
+            model_name=settings.GROQ_MODEL_NAME,
             temperature=0.3
         )
         
