@@ -14,7 +14,7 @@ from backend.app.routes.recommendation_routes import router as recommendation_ro
 from backend.app.routes.ai_routes import router as ai_router
 from backend.app.routes.rag_routers import router as rag_router
 from backend.app.routes.chatbot import router as chatbot_router
-
+from backend.app.routes.s3_demo import router as s3_demo_router
 
 app = FastAPI(
     title=settings.APP_NAME,
@@ -129,3 +129,4 @@ app.include_router(chatbot_router)
 
 # RAG
 app.include_router(rag_router)
+app.include_router(s3_demo_router)

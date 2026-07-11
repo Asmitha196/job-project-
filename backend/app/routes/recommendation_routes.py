@@ -153,8 +153,9 @@ async def get_skills_gap_analysis(
     if not recommendations:
         return {
             "resume_skills": resume.parsed_skills or [],
-            "missing_skills_frequency": {},
-            "recommendations": "No recommendations found. Make sure jobs exist in the system."
+            "total_jobs_evaluated": 0,
+            "skill_gaps": [],
+            "advice": "No recommendations available. Generate job recommendations first."
         }
         
     # 3. Aggregate missing skills
